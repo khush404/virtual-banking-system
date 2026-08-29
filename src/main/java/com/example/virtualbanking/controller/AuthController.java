@@ -1,7 +1,9 @@
 package com.example.virtualbanking.controller;
 
-import com.example.virtualbanking.entity.User;
+import com.example.virtualbanking.dto.RegisterRequest;
+import com.example.virtualbanking.dto.UserResponse;
 import com.example.virtualbanking.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,19 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
-
+@RequestMapping("/api/auth")
+public class AuthController {
     private final UserService userService;
 
-    public UserController(UserService userService){
+    public AuthController(UserService userService){
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        User savedUser = userService.createUser(user);
-
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> register(
+            @Valid @RequestBody RegisterRequest request){
+        UserResponse response = userService.register(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
