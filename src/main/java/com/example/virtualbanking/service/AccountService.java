@@ -4,9 +4,11 @@ import com.example.virtualbanking.entity.Account;
 import com.example.virtualbanking.entity.User;
 import com.example.virtualbanking.repository.AccountRepository;
 import com.example.virtualbanking.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
+@Service
 public class AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
@@ -38,7 +40,7 @@ public class AccountService {
         do{
             accountNumber = "VB"
                     + (100000 + new Random().nextInt(900000));
-        }while(accountRepository.existByAccountNumber(accountNumber));
+        }while(accountRepository.existsByAccountNumber(accountNumber));
         return accountNumber;
     }
 }
