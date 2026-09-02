@@ -9,6 +9,7 @@ import com.example.virtualbanking.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.virtualbanking.security.JwtService;
+import com.example.virtualbanking.exception.InvalidCredentialsException;
 
 @Service
 public class UserService {
@@ -47,7 +48,7 @@ public class UserService {
 
     public LoginResponse login(LoginRequest request){
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
         boolean passwordMatches =
                 passwordEncoder.matches(
@@ -56,7 +57,7 @@ public class UserService {
                 );
 
         if(!passwordMatches){
-            throw new RuntimeException("Invalid email or password");
+            throw new InvalidCredentialsException("Invalid email or password");
         }
 
         String token = jwtService.generateToken(
